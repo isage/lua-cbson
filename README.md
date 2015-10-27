@@ -40,6 +40,7 @@ For other Lua interpreters see cmake options.
 local cbson = require "cbson"
 
 local table_data = cbson.decode(bson_data)
+local bson_data = cbson.encode(table_data)
 ```
 
 ##Authors

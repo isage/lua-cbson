@@ -25,7 +25,7 @@ TestBSON = {}
 
     function TestBSON:test03_Decode_int()
         luaunit.assertNotNil(self.data["bar"])
-        luaunit.assertEquals(self.data["bar"], 12341)
+        luaunit.assertEquals(tostring(self.data["bar"]), "12341")
     end
 
     function TestBSON:test04_Decode_double()
@@ -35,12 +35,20 @@ TestBSON = {}
 
     function TestBSON:test05_Decode_map()
         luaunit.assertNotNil(self.data["map"])
-        luaunit.assertEquals(self.data["map"], {a=1})
+        luaunit.assertNotNil(self.data["map"]["a"])
+        luaunit.assertEquals(tostring(self.data["map"]["a"]), "1")
     end
 
     function TestBSON:test06_Decode_array()
         luaunit.assertNotNil(self.data["array"])
-        luaunit.assertEquals(self.data["array"], {1,2,3,4})
+        luaunit.assertNotNil(self.data["array"][1])
+        luaunit.assertNotNil(self.data["array"][2])
+        luaunit.assertNotNil(self.data["array"][3])
+        luaunit.assertNotNil(self.data["array"][4])
+        luaunit.assertEquals(tostring(self.data["array"][1]), "1")
+        luaunit.assertEquals(tostring(self.data["array"][2]), "2")
+        luaunit.assertEquals(tostring(self.data["array"][3]), "3")
+        luaunit.assertEquals(tostring(self.data["array"][4]), "4")
     end
 
     function TestBSON:test07_Decode_null()
@@ -54,62 +62,58 @@ TestBSON = {}
 
     function TestBSON:test09_Decode_oid()
         luaunit.assertNotNil(self.data["oid"])
-        luaunit.assertNotNil(self.data["oid"]["$oid"])
-        luaunit.assertEquals(self.data["oid"]["$oid"], "000000000000000000000000")
+        luaunit.assertIsUserdata(self.data["oid"])
+        luaunit.assertEquals(tostring(self.data["oid"]), "000000000000000000000000")
     end
 
     function TestBSON:test10_Decode_binary()
         luaunit.assertNotNil(self.data["binary"])
-        luaunit.assertNotNil(self.data["binary"]["$type"])
-        luaunit.assertEquals(self.data["binary"]["$type"], "00")
-        luaunit.assertNotNil(self.data["binary"]["$binary"])
-        luaunit.assertEquals(self.data["binary"]["$binary"], "ZGVhZGJlZWY=")
+        luaunit.assertEquals(self.data["binary"]:type(), 0)
+        luaunit.assertEquals(self.data["binary"]:data(), "ZGVhZGJlZWY=")
+        luaunit.assertEquals(self.data["binary"]:raw(), "deadbeef")
+        luaunit.assertEquals(self.data["binary"]:data("aGVsbG8="), "aGVsbG8=")
+        luaunit.assertEquals(self.data["binary"]:raw(), "hello")
     end
 
     function TestBSON:test11_Decode_regex()
         luaunit.assertNotNil(self.data["regex"])
-        luaunit.assertNotNil(self.data["regex"]["$regex"])
-        luaunit.assertEquals(self.data["regex"]["$regex"], "foo|bar")
-        luaunit.assertNotNil(self.data["regex"]["$options"])
-        luaunit.assertEquals(self.data["regex"]["$options"], "ism")
+        luaunit.assertIsUserdata(self.data["regex"])
+        luaunit.assertEquals(tostring(self.data["regex"]), "/foo|bar/ism")
     end
 
     function TestBSON:test12_Decode_date()
         luaunit.assertNotNil(self.data["date"])
-        luaunit.assertNotNil(self.data["date"]["$date"])
-        luaunit.assertEquals(self.data["date"]["$date"], 10000)
+        luaunit.assertNotNil(self.data["date"])
+        luaunit.assertEquals(tostring(self.data["date"]), "10000")
     end
 
     function TestBSON:test13_Decode_ref()
         luaunit.assertNotNil(self.data["ref"])
-        luaunit.assertNotNil(self.data["ref"]["$ref"])
-        luaunit.assertEquals(self.data["ref"]["$ref"], "foo")
-        luaunit.assertNotNil(self.data["ref"]["$id"])
-        luaunit.assertEquals(self.data["ref"]["$id"], "000000000000000000000000")
+        luaunit.assertEquals(self.data["ref"]:ref(), "foo")
+        luaunit.assertEquals(self.data["ref"]:id(), "000000000000000000000000")
     end
 
     function TestBSON:test14_Decode_undefined()
         luaunit.assertNotNil(self.data["undefined"])
-        luaunit.assertNotNil(self.data["undefined"]["$undefined"])
-        luaunit.assertTrue(self.data["undefined"]["$undefined"])
+        luaunit.assertEquals(tostring(self.data["undefined"]), "undefined")
     end
 
     function TestBSON:test15_Decode_minkey()
         luaunit.assertNotNil(self.data["minkey"])
-        luaunit.assertNotNil(self.data["minkey"]["$minKey"])
-        luaunit.assertEquals(self.data["minkey"]["$minKey"], 1)
+        luaunit.assertEquals(tostring(self.data["minkey"]), "minkey")
     end
 
     function TestBSON:test16_Decode_maxkey()
         luaunit.assertNotNil(self.data["maxkey"])
-        luaunit.assertNotNil(self.data["maxkey"]["$maxKey"])
-        luaunit.assertEquals(self.data["maxkey"]["$maxKey"], 1)
+        luaunit.assertEquals(tostring(self.data["maxkey"]), "maxkey")
     end
 
     function TestBSON:test17_Decode_timestamp()
         luaunit.assertNotNil(self.data["timestamp"])
-        luaunit.assertNotNil(self.data["timestamp"]["$timestamp"])
-        luaunit.assertEquals(self.data["timestamp"]["$timestamp"], {t=100, i=1000})
+        luaunit.assertEquals(self.data["timestamp"]:timestamp(),100)
+        luaunit.assertEquals(self.data["timestamp"]:increment(),1000)
+        luaunit.assertEquals(self.data["timestamp"]:increment(500),500)
+        luaunit.assertEquals(self.data["timestamp"]:increment(),500)
     end
 
 os.exit( luaunit.LuaUnit.run() )
