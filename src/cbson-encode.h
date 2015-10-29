@@ -4,5 +4,6 @@
 #include <lua.h>
 
 int bson_encode(lua_State *L);
+int bson_from_json(lua_State *L);
 
 #endif

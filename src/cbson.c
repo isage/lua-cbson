@@ -47,6 +47,8 @@ int luaopen_cbson(lua_State *L)
   luaL_Reg cbsonlib[] = {
     { "decode",     bson_decode },
     { "encode",     bson_encode },
+    { "to_json",    bson_to_json },
+    { "from_json",  bson_from_json },
     { "regex",      cbson_regex_new },
     { "oid",        cbson_oid_new },
     { "binary",     cbson_binary_new },

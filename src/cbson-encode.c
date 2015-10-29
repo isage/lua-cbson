@@ -268,3 +268,25 @@ int bson_encode(lua_State *L)
   return 1;
 }
 
+int bson_from_json(lua_State *L)
+{
+  bson_t *bson;
+  size_t len;
+  bson_error_t error;
+
+  const uint8_t* data = (uint8_t*)luaL_checklstring(L, 1, &len);
+
+  bson = bson_new_from_json(data, len, &error);
+
+  if (bson)
+  {
+    const uint8_t* data=bson_get_data(bson);
+    lua_pushlstring(L, (const char*)data, bson->len);
+    bson_destroy(bson);
+  }
+  else
+  {
+    luaL_error(L, error.message);
+  }
+  return 1;
+}

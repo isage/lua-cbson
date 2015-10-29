@@ -41,6 +41,9 @@ local cbson = require "cbson"
 
 local table_data = cbson.decode(bson_data)
 local bson_data = cbson.encode(table_data)
+
+local json_string = cbson.to_json(bson_data)
+local bson_data = cbson.from_json(json_string)
 ```
 
 ##Authors
