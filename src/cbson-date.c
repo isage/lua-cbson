@@ -4,11 +4,14 @@
 
 #include "cbson.h"
 #include "cbson-date.h"
+#include "cbson-int.h"
+#include "cbson-uint.h"
+#include "cbson-util.h"
 #include "intpow.h"
 
 int64_t cbson_date_check(lua_State *L, int index)
 {
-  if (lua_isuserdata(L, index) && luaL_checkudata(L, index, DATE_METATABLE))
+  if (lua_isuserdata(L, index) && (luaL_checkudata_ex(L, index, INT64_METATABLE) || luaL_checkudata_ex(L, index, UINT64_METATABLE) || luaL_checkudata_ex(L, index, DATE_METATABLE)))
   {
     return *(int64_t*)lua_touserdata(L, index);
   }

@@ -4,11 +4,19 @@
 
 #include "cbson.h"
 #include "cbson-int.h"
+#include "cbson-uint.h"
+#include "cbson-date.h"
+#include "cbson-util.h"
 #include "intpow.h"
+
+enum {
+  ENDIAN_LE,
+  ENDIAN_BE
+};
 
 int64_t cbson_int64_check(lua_State *L, int index)
 {
-  if (lua_isuserdata(L, index) && luaL_checkudata(L, index, INT64_METATABLE))
+  if (lua_isuserdata(L, index) && (luaL_checkudata_ex(L, index, INT64_METATABLE) || luaL_checkudata_ex(L, index, UINT64_METATABLE) || luaL_checkudata_ex(L, index, DATE_METATABLE)))
   {
     return *(int64_t*)lua_touserdata(L, index);
   }
@@ -65,6 +73,96 @@ int cbson_int64_unm (lua_State* L) { return cbson_int64_create( L, -cbson_int64_
 int cbson_int64_eq  (lua_State* L) { lua_pushboolean( L, cbson_int64_check(L,1) == cbson_int64_check(L,2) ); return 1; }
 int cbson_int64_lt  (lua_State* L) { lua_pushboolean( L, cbson_int64_check(L,1) <  cbson_int64_check(L,2) ); return 1; }
 int cbson_int64_le  (lua_State* L) { lua_pushboolean( L, cbson_int64_check(L,1) <= cbson_int64_check(L,2) ); return 1; }
+
+int cbson_int64_from_raw(lua_State* L)
+{
+  size_t length;
+  const char* data = lua_tolstring(L, 1, &length);
+  int endian = luaL_optnumber(L, 2, ENDIAN_LE);
+
+  if ( length > 8 || length <= 0 )
+  {
+    lua_pushstring(L, "Invalid length");
+    lua_error(L);
+    return 0;
+  }
+
+  int64_t result=0;
+  int i;
+  if (endian==ENDIAN_LE)
+  {
+    result = (uint8_t)data[length-1];
+    for (i=length-2; i>=0; i--)
+    {
+      result=result*256+(uint8_t)data[i];
+    }
+  }
+  else
+  {
+    result = (uint8_t)data[0];
+    for (i=0; i<length; i++)
+    {
+      result=result*256+(uint8_t)data[i];
+    }
+  }
+
+  return cbson_int64_create(L, result);
+  
+}
+
+
+
+int cbson_int64_to_raw(lua_State* L)
+{
+  cbson_uint64_t a = cbson_int64_check(L, 1);
+  int length = luaL_optnumber(L, 2, 4);
+  int endian = luaL_optnumber(L, 3, ENDIAN_LE);
+  if ( length > 8 || length <= 0 ) length=8;
+
+  uint8_t out[8];
+
+  int i;
+
+  if (endian==ENDIAN_LE)
+  {
+    for (i=0; i<length; i++)
+    {
+      out[i] = a;
+      a = a / 256;
+    }
+  }
+  else
+  {
+    for (i=length-1; i>=0; i--)
+    {
+      out[i] = a;
+      a = a / 256;
+    }
+  }
+
+  switch (length)
+  {
+    case 8:
+      lua_pushfstring(L, "%c%c%c%c%c%c%c%c", out[0], out[1], out[2], out[3], out[4], out[5], out[6], out[7]);
+      break;
+    case 4:
+      lua_pushfstring(L, "%c%c%c%c", out[0], out[1], out[2], out[3]);
+      break;
+    case 2:
+      lua_pushfstring(L, "%c%c", out[0], out[1]);
+      break;
+    case 1:
+      lua_pushfstring(L, "%c", out[0]);
+      break;
+    default:
+      lua_pushstring(L, "Invalid length");
+      lua_error(L);
+      return 0;
+      break;
+  }
+  return 1;
+}
+
 
 const struct luaL_Reg cbson_int64_meta[] = {
   { "__add",     cbson_int64_add },

@@ -164,6 +164,10 @@ That's basically int64. It supports all arithmetic operations.
 Due to nature of lua numbers, you can pass big (> 2^53) numbers only as string.
 It also have __tostring metamethod for opposite operation.
 
+There's also helper methods `int_to_raw/uint_to_raw(<int>value, <number>bytes, <bool>big_endian)`  
+and `raw_to_int/raw_to_uint(<string>data, <bool>big_endian)`  
+for converting between number and in-memory representation.
+
 ```lua
 local int = cbson.int(10)
 print(int) -- 10
@@ -177,9 +181,13 @@ print(int2) -- 10
 
 ```
 
+####cbson.uint(<number>value) or cbson.uint(<uint>value) or cbson.uint(<string>value)
+
+See cbson.int. They are same (except sign), and you can init one from another.
+
 ####cbson.date(<number>value) or cbson.date(<date>value) or cbson.date(<string>value)
 
-See cbson.int. They are same, but you can't init date from int and vice versa (for now).
+See cbson.int. They are same, and you can init one from another.
 
 ##Authors
 

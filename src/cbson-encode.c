@@ -7,6 +7,7 @@
 #include <inttypes.h>
 
 #include "cbson.h"
+#include "cbson-util.h"
 #include "cbson-encode.h"
 #include "cbson-oid.h"
 #include "cbson-regex.h"
@@ -17,11 +18,12 @@
 #include "cbson-ref.h"
 #include "cbson-minmax.h"
 #include "cbson-int.h"
+#include "cbson-uint.h"
 #include "cbson-date.h"
 
 
 // encoding
-int is_array(lua_State *L, int index)
+static int is_array(lua_State *L, int index)
 {
   double k;
 
@@ -47,29 +49,7 @@ int is_array(lua_State *L, int index)
   return 1;
 }
 
-int luaL_checkudata_ex(lua_State *L, int ud, const char *tname)
-{
-  void *p = lua_touserdata(L, ud);
-  if (p != NULL)
-  {
-    if (lua_getmetatable(L, ud))
-    {
-      lua_getfield(L, LUA_REGISTRYINDEX, tname);
-
-      if (lua_rawequal(L, -1, -2))
-      {
-        lua_pop(L, 2);
-        return 1;
-      }
-      lua_pop(L, 2);
-      return 0;
-    }
-  }
-  return 0;
-}
-
-
-void iterate_table(lua_State *L, int index, bson_t* bson, int use_keys, int level)
+static void iterate_table(lua_State *L, int index, bson_t* bson, int use_keys, int level)
 {
   lua_pushvalue(L, index);
   // stack: -1 => table
@@ -207,7 +187,7 @@ void iterate_table(lua_State *L, int index, bson_t* bson, int use_keys, int leve
           cbson_timestamp_t* time = check_cbson_timestamp(L, -2);
           BSON_APPEND_TIMESTAMP(bson, key, time->timestamp, time->increment);
         }
-        else if (luaL_checkudata_ex(L, -2, INT64_METATABLE))
+        else if (luaL_checkudata_ex(L, -2, INT64_METATABLE) || luaL_checkudata_ex(L, -2, UINT64_METATABLE))
         {
           cbson_int64_t i = cbson_int64_check(L, -2);
           if (i < INT32_MIN || i > INT32_MAX)
