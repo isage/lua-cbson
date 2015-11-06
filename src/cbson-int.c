@@ -30,7 +30,7 @@ int64_t cbson_int64_check(lua_State *L, int index)
   }
   else
   {
-    lua_pushstring(L, "Invalid operand. Expected 'cbson.int', 'string' or 'number'");
+    lua_pushstring(L, "Invalid operand. Expected 'cbson.int', 'cbson.uint', 'cbson.date', 'string' or 'number'");
     lua_error(L);
     return 0;
   }
