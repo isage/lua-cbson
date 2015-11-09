@@ -65,6 +65,12 @@ Decodes binary BSON data to lua table.
 
 Encodes lua table to binary BSON data.
 
+####`<binary>bson_data = cbson.encode_first(<string>first_key, <table>data)`
+
+Encodes lua table to binary BSON data, putting first_key value at start of bson.  
+(required for mongodb commands)
+Make sure, that given key exists, otherwise it'll add this key with NULL value.
+
 ####`<binary>bson_data = cbson.from_json(<string>json)`
 
 Encodes json string as binary BSON data.

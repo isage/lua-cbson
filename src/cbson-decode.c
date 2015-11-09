@@ -319,7 +319,7 @@ bool cbson_visit_array(const bson_iter_t *iter, const char *key, const bson_t *v
 }
 
 
-int bson_decode(lua_State *L)
+int cbson_decode(lua_State *L)
 {
   bson_t *bson;
   cbson_state_t s = {0, true, 0};
@@ -353,7 +353,7 @@ int bson_decode(lua_State *L)
   return 1;
 }
 
-int bson_to_json(lua_State *L)
+int cbson_to_json(lua_State *L)
 {
   bson_t *bson;
   size_t len;
