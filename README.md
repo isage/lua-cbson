@@ -91,7 +91,7 @@ print( regex:options() )
 local oid = cbson.oid("123456789012345678901234")
 ```
 
-####cbson.binary(<string>base64_encoded_data)
+####cbson.binary(<string>base64_encoded_data, <opt int> type)
 
 ```lua
 local binary = cbson.binary("ZGVhZGJlZWY=")

@@ -24,8 +24,8 @@ int cbson_binary_create(lua_State* L, uint8_t type, const char* binary)
 
 int cbson_binary_new(lua_State* L)
 {
-  uint8_t type = luaL_checknumber(L, 1);
-  const char* binary = luaL_checkstring(L, 2);
+  const char* binary = luaL_checkstring(L, 1);
+  uint8_t type = luaL_optnumber(L, 2, 0);
 
   return cbson_binary_create(L, type, binary);
 }
