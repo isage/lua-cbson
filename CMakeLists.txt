@@ -28,12 +28,6 @@ endif()
 
 get_filename_component(_lua_lib_dir ${LUA_LIBRARY} PATH)
 
-if (USE_LUA52)
-  set(_lua_module_dir "${_lua_lib_dir}/lua/5.2")
-else ()
-  set(_lua_module_dir "${_lua_lib_dir}/lua/5.1")
-endif ()
-
 set (cbson_VERSION_MAJOR 1)
 set (cbson_VERSION_MINOR 0)
 
@@ -48,7 +42,24 @@ include_directories(${cbson_SOURCE_DIR}/src)
 include_directories(${LUA_INCLUDE_DIR})
 include_directories(${LIBBSON_INCLUDE_DIR})
 
-add_library(cbson SHARED ${sources})
+if(APPLE)
+    set(CMAKE_SHARED_MODULE_CREATE_C_FLAGS
+        "${CMAKE_SHARED_MODULE_CREATE_C_FLAGS} -undefined dynamic_lookup")
+endif()
+
+if(WIN32)
+    # Win32 modules need to be linked to the Lua library.
+    target_link_libraries(imagick ${LUA_LIBRARY})
+    set(_lua_module_dir "${_lua_lib_dir}")
+else()
+  if (USE_LUA52)
+    set(_lua_module_dir "${_lua_lib_dir}/lua/5.2")
+  else ()
+    set(_lua_module_dir "${_lua_lib_dir}/lua/5.1")
+  endif ()
+endif()
+
+add_library(cbson MODULE ${sources})
 set_target_properties(cbson PROPERTIES PREFIX "")
 if (NOT WIN32)
   set_target_properties(cbson PROPERTIES SUFFIX ".so")
