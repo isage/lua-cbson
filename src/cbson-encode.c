@@ -26,6 +26,7 @@
 static int is_array(lua_State *L, int index)
 {
   double k;
+  int cnt = 0;
 
   lua_pushvalue(L, index);
   lua_pushnil(L);
@@ -37,6 +38,7 @@ static int is_array(lua_State *L, int index)
        if ((float)(int)(float)(k) == (float)k && k >= 1) // probably int
        {
          lua_pop(L, 1); // pop value
+         cnt++;
          continue;
        }
      }
@@ -46,7 +48,14 @@ static int is_array(lua_State *L, int index)
   }
 
   lua_pop(L, 1); // pop table copy
-  return 1;
+  if (cnt>0) // non-empty array
+  {
+    return 1;
+  }
+  else // empty table. treat as map
+  {
+    return 0;
+  }
 }
 
 static void iterate_table(lua_State *L, int index, bson_t* bson, int use_keys, int level, const char* firstkey);
