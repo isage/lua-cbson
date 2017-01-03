@@ -142,16 +142,16 @@ int cbson_uint64_to_raw(lua_State* L)
   switch (length)
   {
     case 8:
-      lua_pushfstring(L, "%c%c%c%c%c%c%c%c", out[0], out[1], out[2], out[3], out[4], out[5], out[6], out[7]);
+      lua_pushlstring(L, (const char*)out, 8);
       break;
     case 4:
-      lua_pushfstring(L, "%c%c%c%c", out[0], out[1], out[2], out[3]);
+      lua_pushlstring(L, (const char*)out, 4);
       break;
     case 2:
-      lua_pushfstring(L, "%c%c", out[0], out[1]);
+      lua_pushlstring(L, (const char*)out, 2);
       break;
     case 1:
-      lua_pushfstring(L, "%c", out[0]);
+      lua_pushlstring(L, (const char*)out, 1);
       break;
     default:
       lua_pushstring(L, "Invalid length");
