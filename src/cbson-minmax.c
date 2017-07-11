@@ -64,7 +64,10 @@ int cbson_null_tostring(lua_State* L)
   return 1;
 }
 
+int cbson_null_eq  (lua_State* L) { lua_pushboolean( L, (check_cbson_null(L,1)!=NULL) && (check_cbson_null(L,2)!=NULL) ); return 1; }
+
 const struct luaL_Reg cbson_null_meta[] = {
+  { "__eq",      cbson_null_eq  },
   {"__tostring", cbson_null_tostring},
   {NULL, NULL}
 };
