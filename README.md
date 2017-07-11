@@ -1,8 +1,8 @@
-#Lua-cbson
+# Lua-cbson
 
 Lua bindings to MongoDB's libbson
 
-##Table of Contents
+## Table of Contents
 
 * [FAQ](#faq)
 * [Requirements](#requirements)
@@ -11,7 +11,7 @@ Lua bindings to MongoDB's libbson
 * [Authors](#authors)
 * [Copyright and License](#copyright-and-license)
 
-##FAQ
+## FAQ
 
 * Q: Is it compatible with cjson?  
   A: Hell no. All bson subtypes are defined as userdata. Use cbson.to_json and cbson.from_json
@@ -19,14 +19,14 @@ Lua bindings to MongoDB's libbson
   A: Lua, prior to 5.3 stores all numbers as double. So, cbson.encode({foo = 10}) will yield double bson type.  
      Use cbson.int datatype. It will automaticaly yield int32 or int64 depending on value.
 
-##Requirements
+## Requirements
 
 * Lua (5.1/5.2) or LuaJit
 * Cmake 2.8.12 or later
 * Working C compiler
 * libbson 1.2 or later
 
-##Installation
+## Installation
 
 As easy as  
 ```bash
@@ -41,9 +41,9 @@ You can also use `make unittest` after make to run tests.
 By default module compiles with support for luajit  
 For other Lua interpreters see cmake options.
 
-##Usage
+## Usage
 
-###Synopsis
+### Synopsis
 
 ```lua
 local cbson = require "cbson"
@@ -55,33 +55,33 @@ local json_string = cbson.to_json(bson_data)
 local bson_data = cbson.from_json(json_string)
 ```
 
-###CBSON Functions
+### CBSON Functions
 
-####`<table>decoded = cbson.decode(<binary>bson_data)`
+#### `<table>decoded = cbson.decode(<binary>bson_data)`
 
 Decodes binary BSON data to lua table.
 
-####`<binary>bson_data = cbson.encode(<table>data)`
+#### `<binary>bson_data = cbson.encode(<table>data)`
 
 Encodes lua table to binary BSON data.
 
-####`<binary>bson_data = cbson.encode_first(<string>first_key, <table>data)`
+#### `<binary>bson_data = cbson.encode_first(<string>first_key, <table>data)`
 
 Encodes lua table to binary BSON data, putting first_key value at start of bson.  
 (required for mongodb commands)
 Make sure, that given key exists, otherwise it'll add this key with NULL value.
 
-####`<binary>bson_data = cbson.from_json(<string>json)`
+#### `<binary>bson_data = cbson.from_json(<string>json)`
 
 Encodes json string as binary BSON data.
 
-####`<string>json_data = cbson.to_json(<binary>bson_data)`
+#### `<string>json_data = cbson.to_json(<binary>bson_data)`
 
 Encodes binary BSON data as json string.
 
-###Embed datatypes
+### Embed datatypes
 
-####cbson.regex(<string>regex, <string>options)
+#### cbson.regex(<string>regex, <string>options)
 
 ```lua
 local regex = cbson.regex("foo|bar","ism")
@@ -91,13 +91,13 @@ regex:options("im")
 print( regex:options() )
 ```
 
-####cbson.oid(<string>oid)
+#### cbson.oid(<string>oid)
 
 ```lua
 local oid = cbson.oid("123456789012345678901234")
 ```
 
-####cbson.binary(<string>base64_encoded_data, <opt int> type)
+#### cbson.binary(<string>base64_encoded_data, <opt int> type)
 
 ```lua
 local binary = cbson.binary("ZGVhZGJlZWY=")
@@ -106,19 +106,19 @@ binary:raw("hello")
 print( binary:data() ) -- "aGVsbG8="
 ```
 
-####cbson.symbol(<string>symbol)
+#### cbson.symbol(<string>symbol)
 
 ```lua
 local symbol = cbson.symbol("something")
 ```
 
-####cbson.code(<string>code)
+#### cbson.code(<string>code)
 
 ```lua
 local code = cbson.code("code")
 ```
 
-####cbson.codewscope(<string>code)
+#### cbson.codewscope(<string>code)
 
 Scopes are not supported yet.
 
@@ -126,25 +126,25 @@ Scopes are not supported yet.
 local code = cbson.codewcope("code")
 ```
 
-####cbson.undefined()
+#### cbson.undefined()
 
 ```lua
 local undef = cbson.undefined()
 ```
 
-####cbson.minkey()
+#### cbson.minkey()
 
 ```lua
 local minkey = cbson.minkey()
 ```
 
-####cbson.maxkey()
+#### cbson.maxkey()
 
 ```lua
 local maxkey = cbson.maxkey()
 ```
 
-####cbson.ref(<string>ref, <string>id)
+#### cbson.ref(<string>ref, <string>id)
 
 ```lua
 local ref = cbson.ref("foo", "123456789012345678901234")
@@ -153,7 +153,7 @@ ref:ref("bar")
 ref:id("432109876543210987654321")
 ```
 
-####cbson.timestamp(<number>timestamp, <number>increment)
+#### cbson.timestamp(<number>timestamp, <number>increment)
 
 ```lua
 local timestamp = cbson.timestamp(100,1000)
@@ -164,7 +164,7 @@ print( timestamp:increment() ) -- 100500
 
 ```
 
-####cbson.int(<number>value) or cbson.int(<int>value) or cbson.int(<string>value)
+#### cbson.int(<number>value) or cbson.int(<int>value) or cbson.int(<string>value)
 
 That's basically int64. It supports all arithmetic operations.  
 Due to nature of lua numbers, you can pass big (> 2^53) numbers only as string.
@@ -187,21 +187,21 @@ print(int2) -- 10
 
 ```
 
-####cbson.uint(<number>value) or cbson.uint(<uint>value) or cbson.uint(<string>value)
+#### cbson.uint(<number>value) or cbson.uint(<uint>value) or cbson.uint(<string>value)
 
 See cbson.int. They are same (except sign), and you can init one from another.
 
-####cbson.date(<number>value) or cbson.date(<date>value) or cbson.date(<string>value)
+#### cbson.date(<number>value) or cbson.date(<date>value) or cbson.date(<string>value)
 
 See cbson.int. They are same, and you can init one from another.
 
-##Authors
+## Authors
 
 Epifanov Ivan <isage.dna@gmail.com>
 
 [Back to TOC](#table-of-contents)
 
-##Copyright and License
+## Copyright and License
 
 This module is licensed under the WTFPL license.  
 (See LICENSE)
