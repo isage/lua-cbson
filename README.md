@@ -132,6 +132,12 @@ local code = cbson.codewcope("code")
 local undef = cbson.undefined()
 ```
 
+#### cbson.null()
+
+```lua
+local null = cbson.null()
+```
+
 #### cbson.minkey()
 
 ```lua

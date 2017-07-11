@@ -58,6 +58,7 @@ int luaopen_cbson(lua_State *L)
     { "code",         cbson_code_new },
     { "codewscope",   cbson_codewscope_new },
     { "undefined",    cbson_undefined_new },
+    { "null",         cbson_null_new },
     { "minkey",       cbson_minkey_new },
     { "maxkey",       cbson_maxkey_new },
     { "ref",          cbson_ref_new },
@@ -80,6 +81,7 @@ int luaopen_cbson(lua_State *L)
   DECLARE_CLASS(L, CODE,       code);
   DECLARE_CLASS(L, CODEWSCOPE, codewscope);
   DECLARE_CLASS(L, UNDEFINED,  undefined);
+  DECLARE_CLASS(L, CBNULL,     null);
   DECLARE_CLASS(L, MINKEY,     minkey);
   DECLARE_CLASS(L, MAXKEY,     maxkey);
   DECLARE_CLASS(L, REF,        ref);

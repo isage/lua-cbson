@@ -108,7 +108,8 @@ bool cbson_visit_null(const bson_iter_t *iter, const char *key, void *data)
 {
   cbson_state_t *s = data;
 
-  lua_pushnil(s->L);
+//  lua_pushnil(s->L);
+  cbson_null_create(s->L);
 
   return false;
 }

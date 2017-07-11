@@ -38,6 +38,41 @@ const struct luaL_Reg cbson_undefined_methods[] = {
   {NULL, NULL}
 };
 
+// NULL
+
+DEFINE_CHECK(CBNULL, null)
+
+int cbson_null_create(lua_State* L)
+{
+  lua_newuserdata(L, sizeof(cbson_null_t));
+
+  luaL_getmetatable(L, CBNULL_METATABLE);
+  lua_setmetatable(L, -2);
+  return 1;
+}
+
+int cbson_null_new(lua_State* L)
+{
+  return cbson_null_create(L);
+}
+
+int cbson_null_tostring(lua_State* L)
+{
+  check_cbson_null(L, 1);
+
+  lua_pushstring(L, "null");
+  return 1;
+}
+
+const struct luaL_Reg cbson_null_meta[] = {
+  {"__tostring", cbson_null_tostring},
+  {NULL, NULL}
+};
+
+const struct luaL_Reg cbson_null_methods[] = {
+  {NULL, NULL}
+};
+
 // MINKEY
 
 DEFINE_CHECK(MINKEY, minkey)

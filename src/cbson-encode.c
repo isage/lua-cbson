@@ -199,6 +199,11 @@ void switch_value(lua_State *L, int index, bson_t* bson, int level, const char* 
           check_cbson_undefined(L, index);
           BSON_APPEND_UNDEFINED(bson, key);
         }
+        else if (luaL_checkudata_ex(L, index, CBNULL_METATABLE))
+        {
+          check_cbson_null(L, index);
+          BSON_APPEND_NULL(bson, key);
+        }
         else if (luaL_checkudata_ex(L, index, DATE_METATABLE))
         {
           BSON_APPEND_DATE_TIME(bson, key, cbson_date_check(L, index));
