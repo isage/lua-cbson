@@ -283,6 +283,7 @@ int cbson_encode(lua_State *L)
 
   const uint8_t* data=bson_get_data(&bson);
   lua_pushlstring(L, (const char*)data, bson.len);
+  bson_destroy(&bson);
   return 1;
 }
 
@@ -298,6 +299,7 @@ int cbson_encode_first(lua_State *L)
 
   const uint8_t* data=bson_get_data(&bson);
   lua_pushlstring(L, (const char*)data, bson.len);
+  bson_destroy(&bson);
   return 1;
 }
 
