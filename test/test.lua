@@ -52,7 +52,7 @@ TestBSON = {}
     end
 
     function TestBSON:test07_Decode_null()
-        luaunit.assertNil(self.data["null"])
+        luaunit.assertEquals(self.data["null"], self.cbson.null())
     end
 
     function TestBSON:test08_Decode_bool()
@@ -199,7 +199,7 @@ TestBSONEncode = {}
     end
 
     function TestBSONEncode:test07_Decode_null()
-        luaunit.assertNil(self.data["null"])
+        luaunit.assertEquals(self.data["null"], self.cbson.null())
     end
 
     function TestBSONEncode:test08_Decode_bool()
