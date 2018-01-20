@@ -9,7 +9,7 @@
 #include "cbson-code.h"
 #include "cbson-timestamp.h"
 #include "cbson-ref.h"
-#include "cbson-minmax.h"
+#include "cbson-misc.h"
 #include "cbson-int.h"
 #include "cbson-uint.h"
 #include "cbson-date.h"
@@ -59,6 +59,7 @@ int luaopen_cbson(lua_State *L)
     { "codewscope",   cbson_codewscope_new },
     { "undefined",    cbson_undefined_new },
     { "null",         cbson_null_new },
+    { "array",        cbson_array_new },
     { "minkey",       cbson_minkey_new },
     { "maxkey",       cbson_maxkey_new },
     { "ref",          cbson_ref_new },
@@ -82,6 +83,7 @@ int luaopen_cbson(lua_State *L)
   DECLARE_CLASS(L, CODEWSCOPE, codewscope);
   DECLARE_CLASS(L, UNDEFINED,  undefined);
   DECLARE_CLASS(L, CBNULL,     null);
+  DECLARE_CLASS(L, ARRAY,      array);
   DECLARE_CLASS(L, MINKEY,     minkey);
   DECLARE_CLASS(L, MAXKEY,     maxkey);
   DECLARE_CLASS(L, REF,        ref);

@@ -15,7 +15,7 @@
 #include "cbson-code.h"
 #include "cbson-timestamp.h"
 #include "cbson-ref.h"
-#include "cbson-minmax.h"
+#include "cbson-misc.h"
 #include "cbson-int.h"
 #include "cbson-date.h"
 

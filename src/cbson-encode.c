@@ -16,7 +16,7 @@
 #include "cbson-code.h"
 #include "cbson-timestamp.h"
 #include "cbson-ref.h"
-#include "cbson-minmax.h"
+#include "cbson-misc.h"
 #include "cbson-int.h"
 #include "cbson-uint.h"
 #include "cbson-date.h"
@@ -207,6 +207,11 @@ void switch_value(lua_State *L, int index, bson_t* bson, int level, const char* 
         else if (luaL_checkudata_ex(L, index, DATE_METATABLE))
         {
           BSON_APPEND_DATE_TIME(bson, key, cbson_date_check(L, index));
+        }
+        else if (luaL_checkudata_ex(L, index, ARRAY_METATABLE))
+        {
+          bson_t child;
+          BSON_APPEND_ARRAY(bson, key, &child);
         }
         break;
       }

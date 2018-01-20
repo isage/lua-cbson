@@ -1,7 +1,7 @@
 #include <lauxlib.h>
 
 #include "cbson.h"
-#include "cbson-minmax.h"
+#include "cbson-misc.h"
 
 // UNDEFINED
 
@@ -75,6 +75,45 @@ const struct luaL_Reg cbson_null_meta[] = {
 const struct luaL_Reg cbson_null_methods[] = {
   {NULL, NULL}
 };
+
+// EMPTY ARRAY
+
+DEFINE_CHECK(ARRAY, array)
+
+int cbson_array_create(lua_State* L)
+{
+  lua_newuserdata(L, sizeof(cbson_array_t));
+
+  luaL_getmetatable(L, ARRAY_METATABLE);
+  lua_setmetatable(L, -2);
+  return 1;
+}
+
+int cbson_array_new(lua_State* L)
+{
+  return cbson_array_create(L);
+}
+
+int cbson_array_tostring(lua_State* L)
+{
+  check_cbson_null(L, 1);
+
+  lua_pushstring(L, "array(empty)");
+  return 1;
+}
+
+int cbson_array_eq  (lua_State* L) { lua_pushboolean( L, (check_cbson_array(L,1)!=NULL) && (check_cbson_array(L,2)!=NULL) ); return 1; }
+
+const struct luaL_Reg cbson_array_meta[] = {
+  { "__eq",      cbson_array_eq  },
+  {"__tostring", cbson_array_tostring},
+  {NULL, NULL}
+};
+
+const struct luaL_Reg cbson_array_methods[] = {
+  {NULL, NULL}
+};
+
 
 // MINKEY
 

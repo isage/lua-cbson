@@ -4,20 +4,20 @@
 #include <lua.h>
 
 #define UNDEFINED_METATABLE "bson-undef metatable"
-#define CBNULL_METATABLE "bson-null metatable"
-#define MINKEY_METATABLE "bson-minkey metatable"
-#define MAXKEY_METATABLE "bson-maxkey metatable"
+#define CBNULL_METATABLE    "bson-null metatable"
+#define ARRAY_METATABLE     "bson-array metatable"
+#define MINKEY_METATABLE    "bson-minkey metatable"
+#define MAXKEY_METATABLE    "bson-maxkey metatable"
 
 typedef struct {
   char unused;
 } cbson_undefined_t;
 
-typedef struct {
-  char unused;
-} cbson_null_t;
-
 typedef cbson_undefined_t cbson_minkey_t;
 typedef cbson_undefined_t cbson_maxkey_t;
+
+typedef cbson_undefined_t cbson_null_t;
+typedef cbson_undefined_t cbson_array_t;
 
 int cbson_undefined_create(lua_State* L);
 int cbson_undefined_new(lua_State* L);
@@ -27,11 +27,18 @@ int cbson_null_create(lua_State* L);
 int cbson_null_new(lua_State* L);
 cbson_null_t* check_cbson_null(lua_State *L, int index);
 
+int cbson_array_create(lua_State* L);
+int cbson_array_new(lua_State* L);
+cbson_array_t* check_cbson_array(lua_State *L, int index);
+
 extern const struct luaL_Reg cbson_undefined_meta[];
 extern const struct luaL_Reg cbson_undefined_methods[];
 
 extern const struct luaL_Reg cbson_null_meta[];
 extern const struct luaL_Reg cbson_null_methods[];
+
+extern const struct luaL_Reg cbson_array_meta[];
+extern const struct luaL_Reg cbson_array_methods[];
 
 int cbson_minkey_create(lua_State* L);
 int cbson_minkey_new(lua_State* L);

@@ -138,6 +138,12 @@ local undef = cbson.undefined()
 local null = cbson.null()
 ```
 
+#### cbson.array()
+
+```lua
+local empty_array = cbson.array()
+```
+
 #### cbson.minkey()
 
 ```lua
