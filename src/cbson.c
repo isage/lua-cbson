@@ -34,6 +34,8 @@
 #define DECLARE_CLASS(state, name, type) \
   luaL_newmetatable(state, name##_METATABLE); \
   luaL_register(state, NULL, cbson_##type##_meta); \
+  lua_pushliteral(state, #name ); \
+  lua_setfield(state, -2, "_NAME"); \
 \
   lua_newtable(state); \
   luaL_register(state, NULL, cbson_##type##_methods); \
