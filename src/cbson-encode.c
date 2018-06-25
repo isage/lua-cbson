@@ -211,7 +211,8 @@ void switch_value(lua_State *L, int index, bson_t* bson, int level, const char* 
         else if (luaL_checkudata_ex(L, index, ARRAY_METATABLE))
         {
           bson_t child;
-          BSON_APPEND_ARRAY(bson, key, &child);
+          BSON_APPEND_ARRAY_BEGIN(bson, key, &child);
+          bson_append_array_end(bson, &child);
         }
         break;
       }
