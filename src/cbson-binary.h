@@ -11,6 +11,7 @@
 
 typedef struct {
   int8_t type;
+  unsigned int size;
   char* data;
 } cbson_binary_t;
 

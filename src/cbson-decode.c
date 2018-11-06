@@ -216,16 +216,7 @@ bool cbson_visit_dbpointer(const bson_iter_t *iter, const char *key, size_t v_co
 bool cbson_visit_binary(const bson_iter_t *iter, const char *key, bson_subtype_t v_subtype, size_t v_binary_len, const uint8_t *v_binary, void *data)
 {
   cbson_state_t *s = data;
-  size_t b64_len;
-  char *b64;
-
-  b64_len = (v_binary_len / 3 + 1) * 4 + 1;
-  b64 = malloc(b64_len);
-  b64_ntop(v_binary, v_binary_len, b64, b64_len);
-
-  cbson_binary_create(s->L, v_subtype, b64);
-
-  free(b64);
+  cbson_binary_create(s->L, v_subtype, v_binary, v_binary_len);
 
   return false;
 }
