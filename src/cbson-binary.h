@@ -15,7 +15,7 @@ typedef struct {
   char* data;
 } cbson_binary_t;
 
-int cbson_binary_create(lua_State* L, uint8_t type, const char* binary);
+int cbson_binary_create(lua_State* L, uint8_t type, const char* binary, unsigned int size);
 int cbson_binary_new(lua_State* L);
 cbson_binary_t* check_cbson_binary(lua_State *L, int index);
 

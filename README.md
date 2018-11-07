@@ -97,13 +97,20 @@ print( regex:options() )
 local oid = cbson.oid("123456789012345678901234")
 ```
 
+Get timestamp from `oid`:
+
+```lua
+local timestamp = oid:timestamp()
+```
+
 #### cbson.binary(<string>base64_encoded_data, <opt int> type)
 
 ```lua
 local binary = cbson.binary("ZGVhZGJlZWY=")
 print( binary:raw() ) -- "deadbeef"
-binary:raw("hello")
+binary:set_raw("hello") -- binary:raw("hello") works fine
 print( binary:data() ) -- "aGVsbG8="
+binary:set_data("ZGVhZGJlZWY=")
 ```
 
 #### cbson.symbol(<string>symbol)

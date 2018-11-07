@@ -216,7 +216,7 @@ bool cbson_visit_dbpointer(const bson_iter_t *iter, const char *key, size_t v_co
 bool cbson_visit_binary(const bson_iter_t *iter, const char *key, bson_subtype_t v_subtype, size_t v_binary_len, const uint8_t *v_binary, void *data)
 {
   cbson_state_t *s = data;
-  cbson_binary_create(s->L, v_subtype, v_binary, v_binary_len);
+  cbson_binary_create(s->L, v_subtype, (const char *)v_binary, (unsigned int)v_binary_len);
 
   return false;
 }

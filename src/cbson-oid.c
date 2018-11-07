@@ -50,6 +50,19 @@ int cbson_oid_tostring(lua_State* L)
   return 1;
 }
 
+int cbson_oid_timestamp(lua_State* L)
+{
+  cbson_oid_t* a = check_cbson_oid(L, 1);
+  char hex[9];
+  uint32_t number;
+
+  strncpy(hex, a->oid, 8);
+  hex[8] = '\n';
+  number = (uint32_t)strtol(hex, NULL, 16);
+  lua_pushnumber(L, number);
+  return 1;
+}
+
 
 const struct luaL_Reg cbson_oid_meta[] = {
   {"__tostring", cbson_oid_tostring},
@@ -58,5 +71,6 @@ const struct luaL_Reg cbson_oid_meta[] = {
 };
 
 const struct luaL_Reg cbson_oid_methods[] = {
+  {"timestamp",   cbson_oid_timestamp},
   {NULL, NULL}
 };

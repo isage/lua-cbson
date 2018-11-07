@@ -52,6 +52,14 @@ int cbson_int64_new(lua_State* L)
   return cbson_int64_create(L, cbson_int64_check(L,1));
 }
 
+int cbson_int64_number(lua_State* L)
+{
+  cbson_int64_t a = cbson_int64_check(L, 1);
+
+  lua_pushnumber(L, a);
+  return 1;
+}
+
 int cbson_int64_tostring(lua_State* L)
 {
   cbson_int64_t a = cbson_int64_check(L, 1);
@@ -180,5 +188,6 @@ const struct luaL_Reg cbson_int64_meta[] = {
 };
 
 const struct luaL_Reg cbson_int64_methods[] = {
+  {"number", cbson_int64_number},
   {NULL, NULL}
 };

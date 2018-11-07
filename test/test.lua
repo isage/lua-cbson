@@ -64,6 +64,7 @@ TestBSON = {}
         luaunit.assertNotNil(self.data["oid"])
         luaunit.assertIsUserdata(self.data["oid"])
         luaunit.assertEquals(tostring(self.data["oid"]), "000000000000000000000000")
+        luaunit.assertEquals(self.data["oid"]:timestamp(), 0)
     end
 
     function TestBSON:test10_Decode_binary()
@@ -225,7 +226,7 @@ TestBSONEncode = {}
     function TestBSONEncode:test11_Decode_regex()
         luaunit.assertNotNil(self.data["regex"])
         luaunit.assertIsUserdata(self.data["regex"])
-        luaunit.assertEquals(tostring(self.data["regex"]), "/foo|bar/ism")
+        luaunit.assertEquals(tostring(self.data["regex"]), "/foo|bar/ims")
     end
 
     function TestBSONEncode:test12_Decode_date()

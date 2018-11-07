@@ -134,13 +134,7 @@ void switch_value(lua_State *L, int index, bson_t* bson, int level, const char* 
         {
           cbson_binary_t* bin = check_cbson_binary(L, index);
 
-          size_t binary_len = b64_pton (bin->data, NULL, 0);
-          unsigned char* buf=malloc(binary_len+1);
-          b64_pton(bin->data, buf, binary_len+1);
-
-          BSON_APPEND_BINARY(bson, key, bin->type, buf, binary_len);
-
-          free(buf);
+          BSON_APPEND_BINARY(bson, key, bin->type, (const uint8_t*)bin->data, bin->size);
         }
         else if (luaL_checkudata_ex(L, index, SYMBOL_METATABLE))
         {
