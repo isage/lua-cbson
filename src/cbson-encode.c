@@ -20,6 +20,7 @@
 #include "cbson-int.h"
 #include "cbson-uint.h"
 #include "cbson-date.h"
+#include "cbson-decimal.h"
 
 
 // encoding
@@ -207,6 +208,11 @@ void switch_value(lua_State *L, int index, bson_t* bson, int level, const char* 
           bson_t child;
           BSON_APPEND_ARRAY_BEGIN(bson, key, &child);
           bson_append_array_end(bson, &child);
+        }
+        else if (luaL_checkudata_ex(L, index,  DECIMAL_METATABLE))
+        {
+          cbson_decimal_t * dec = check_cbson_decimal(L, index);
+          BSON_APPEND_DECIMAL128(bson, key, &dec->dec);
         }
         break;
       }

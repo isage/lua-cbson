@@ -200,10 +200,12 @@ print(int) -- 10
 local int = cbson.int("100")
 print(int) -- 100
 
+local int = cbson.int("100")
+print(int:number() + 20) -- 120
+
 local int = cbson.int(10)
 local int2 = cbson.int(int)
 print(int2) -- 10
-
 ```
 
 #### cbson.uint(<number>value) or cbson.uint(<uint>value) or cbson.uint(<string>value)
@@ -214,9 +216,29 @@ See cbson.int. They are same (except sign), and you can init one from another.
 
 See cbson.int. They are same, and you can init one from another.
 
+### cbson.decimal(<string>value)
+
+That's basically [decimal128](https://github.com/mongodb/specifications/blob/master/source/bson-decimal128/decimal128.rst).
+The Decimal128 specification supports 34 decimal digits of precision,
+a max value of approximately `10^6145`, and min value of approximately `-10^6145`
+
+```lua
+local dec = cbson.decimal("1.0")
+print(dec) -- 1.0
+
+local dec = cbson.decimal("0.0005")
+print(dec) -- 0.0005
+
+
+local dec = cbson.decimal("1.0")
+local dec2 = cbson.decimal(dec)
+print(dec2) -- 1.0
+```
+
 ## Authors
 
 Epifanov Ivan <isage.dna@gmail.com>
+Shalganov Ivan <a.cobest@gmail.com>
 
 [Back to TOC](#table-of-contents)
 

@@ -13,6 +13,7 @@
 #include "cbson-int.h"
 #include "cbson-uint.h"
 #include "cbson-date.h"
+#include "cbson-decimal.h"
 
 #include "cbson-encode.h"
 #include "cbson-decode.h"
@@ -68,6 +69,7 @@ int luaopen_cbson(lua_State *L)
     { "timestamp",    cbson_timestamp_new },
     { "int",          cbson_int64_new },
     { "uint",         cbson_uint64_new },
+    { "decimal",      cbson_decimal_new },
     { "date",         cbson_date_new },
     { "int_to_raw",   cbson_int64_to_raw },
     { "raw_to_int",   cbson_int64_from_raw },
@@ -91,6 +93,7 @@ int luaopen_cbson(lua_State *L)
   DECLARE_CLASS(L, REF,        ref);
   DECLARE_CLASS(L, TIMESTAMP,  timestamp);
   DECLARE_CLASS(L, INT64,      int64);
+  DECLARE_CLASS(L, DECIMAL,    decimal);
   DECLARE_CLASS(L, DATE,       date);
   DECLARE_CLASS(L, UINT64,     uint64);
 

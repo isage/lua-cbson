@@ -18,6 +18,7 @@
 #include "cbson-misc.h"
 #include "cbson-int.h"
 #include "cbson-date.h"
+#include "cbson-decimal.h"
 
 typedef struct {
   uint32_t count;
@@ -221,6 +222,14 @@ bool cbson_visit_binary(const bson_iter_t *iter, const char *key, bson_subtype_t
   return false;
 }
 
+bool cbson_visit_decimal128(const bson_iter_t *iter, const char *key, const bson_decimal128_t *v_decimal128, void *data)
+{
+  cbson_state_t *s = data;
+  cbson_decimal_create(s->L, v_decimal128);
+
+  return false;
+}
+
 bool cbson_visit_timestamp(const bson_iter_t *iter, const char *key, uint32_t v_timestamp, uint32_t v_increment, void *data)
 {
   cbson_state_t *s = data;
@@ -253,7 +262,9 @@ const bson_visitor_t cbson_visitors = {
   cbson_visit_timestamp,
   cbson_visit_int64,
   cbson_visit_maxkey,
-  cbson_visit_minkey
+  cbson_visit_minkey,
+  NULL, /* visit_unsupported */
+  cbson_visit_decimal128
 };
 
 bool cbson_visit_document(const bson_iter_t *iter, const char *key, const bson_t *v_document, void *data)
