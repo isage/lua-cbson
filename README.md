@@ -52,6 +52,7 @@ local table_data = cbson.decode(bson_data)
 local bson_data = cbson.encode(table_data)
 
 local json_string = cbson.to_json(bson_data)
+local json_string = cbson.to_relaxed_json(bson_data)
 local bson_data = cbson.from_json(json_string)
 ```
 
@@ -75,13 +76,18 @@ Make sure, that given key exists, otherwise it'll add this key with NULL value.
 
 Encodes json string as binary BSON data.
 
+
 #### `<string>json_data = cbson.to_json(<binary>bson_data)`
 
 Encodes binary BSON data as json string.
 
+#### `<string>json_data = cbson.to_relaxed_json(<binary>bson_data)`
+
+Encodes binary BSON data as [relaxed json](https://github.com/mongodb/specifications/blob/master/source/extended-json.rst#relaxed-extended-json-example) string.
+
 ### Embed datatypes
 
-#### cbson.regex(<string>regex, <string>options)
+#### `cbson.regex(<string>regex, <string>options)`
 
 ```lua
 local regex = cbson.regex("foo|bar","ism")
@@ -91,41 +97,44 @@ regex:options("im")
 print( regex:options() )
 ```
 
-#### cbson.oid(<string>oid)
+#### `cbson.oid(<string>oid)`
+
+Unique object id with 24 hex numbers.
 
 ```lua
-local oid = cbson.oid("123456789012345678901234")
+local oid = cbson.oid("1234567890ABCDEF01234567")
 ```
 
-Get timestamp from `oid`:
+Get time from `oid` (first 8 hex numbers):
 
 ```lua
 local timestamp = oid:timestamp()
+print(timestamp) -- 305419896
 ```
 
-#### cbson.binary(<string>base64_encoded_data, <opt int> type)
+#### `cbson.binary(<string>base64_encoded_data[, <int> type])`
 
 ```lua
 local binary = cbson.binary("ZGVhZGJlZWY=")
-print( binary:raw() ) -- "deadbeef"
+print( binary:raw() ) -- returns raw binary data "deadbeef"
 binary:set_raw("hello") -- binary:raw("hello") works fine
-print( binary:data() ) -- "aGVsbG8="
+print( binary:data() ) -- returns base64 encoded data "aGVsbG8="
 binary:set_data("ZGVhZGJlZWY=")
 ```
 
-#### cbson.symbol(<string>symbol)
+#### `cbson.symbol(<string>symbol)`
 
 ```lua
 local symbol = cbson.symbol("something")
 ```
 
-#### cbson.code(<string>code)
+#### `cbson.code(<string>code)`
 
 ```lua
 local code = cbson.code("code")
 ```
 
-#### cbson.codewscope(<string>code)
+#### `cbson.codewscope(<string>code)`
 
 Scopes are not supported yet.
 
@@ -133,37 +142,37 @@ Scopes are not supported yet.
 local code = cbson.codewcope("code")
 ```
 
-#### cbson.undefined()
+#### `cbson.undefined()`
 
 ```lua
 local undef = cbson.undefined()
 ```
 
-#### cbson.null()
+#### `cbson.null()`
 
 ```lua
 local null = cbson.null()
 ```
 
-#### cbson.array()
+#### `cbson.array()`
 
 ```lua
 local empty_array = cbson.array()
 ```
 
-#### cbson.minkey()
+#### `cbson.minkey()`
 
 ```lua
 local minkey = cbson.minkey()
 ```
 
-#### cbson.maxkey()
+#### `cbson.maxkey()`
 
 ```lua
 local maxkey = cbson.maxkey()
 ```
 
-#### cbson.ref(<string>ref, <string>id)
+#### `cbson.ref(<string>ref, <string>id)`
 
 ```lua
 local ref = cbson.ref("foo", "123456789012345678901234")
@@ -172,7 +181,7 @@ ref:ref("bar")
 ref:id("432109876543210987654321")
 ```
 
-#### cbson.timestamp(<number>timestamp, <number>increment)
+#### `cbson.timestamp(<number>timestamp, <number>increment)`
 
 ```lua
 local timestamp = cbson.timestamp(100,1000)
@@ -183,7 +192,7 @@ print( timestamp:increment() ) -- 100500
 
 ```
 
-#### cbson.int(<number>value) or cbson.int(<int>value) or cbson.int(<string>value)
+#### `cbson.int(<number>value) or cbson.int(<int>value) or cbson.int(<string>value)`
 
 That's basically int64. It supports all arithmetic operations.  
 Due to nature of lua numbers, you can pass big (> 2^53) numbers only as string.
@@ -208,16 +217,16 @@ local int2 = cbson.int(int)
 print(int2) -- 10
 ```
 
-#### cbson.uint(<number>value) or cbson.uint(<uint>value) or cbson.uint(<string>value)
+#### `cbson.uint(<number>value) or cbson.uint(<uint>value) or cbson.uint(<string>value)`
 
 See cbson.int. They are same (except sign), and you can init one from another.
 
-#### cbson.date(<number>value) or cbson.date(<date>value) or cbson.date(<string>value)
+#### `cbson.date(<number>value) or cbson.date(<date>value) or cbson.date(<string>value)`
 
 BSON Date is a 64-bit integer that represents the number of milliseconds since the Unix epoch (Jan 1, 1970).
 This results in a representable date range of about 290 million years into the past and future.
 
-#### cbson.decimal(<string>value)
+#### `cbson.decimal(<string>value)`
 
 It's [decimal128](https://github.com/mongodb/specifications/blob/master/source/bson-decimal128/decimal128.rst).
 The Decimal128 supports 34 decimal digits of precision,
@@ -239,7 +248,6 @@ print(dec2) -- 1.0
 ## Authors
 
 Epifanov Ivan <isage.dna@gmail.com>
-Shalganov Ivan <a.cobest@gmail.com>
 
 [Back to TOC](#table-of-contents)
 

@@ -5,5 +5,6 @@
 
 int cbson_decode(lua_State *L);
 int cbson_to_json(lua_State *L);
+int cbson_to_relaxed_json(lua_State *L);
 
 #endif

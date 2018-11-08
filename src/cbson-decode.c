@@ -369,6 +369,30 @@ int cbson_to_json(lua_State *L)
   {
     const char* str = bson_as_json(bson, &len);
     lua_pushlstring(L, str, len);
+    bson_free((void *)str);
+    bson_destroy(bson);
+  }
+  else
+  {
+    luaL_error(L, "Can't init bson from data.");
+  }
+  return 1;
+}
+
+int cbson_to_relaxed_json(lua_State *L)
+{
+  bson_t *bson;
+  size_t len;
+
+  const uint8_t* data = (uint8_t*)luaL_checklstring(L, 1, &len);
+
+  bson = bson_new_from_data(data, len);
+
+  if (bson)
+  {
+    const char* str = bson_as_relaxed_extended_json(bson, &len);
+    lua_pushlstring(L, str, len);
+    bson_free((void *)str);
     bson_destroy(bson);
   }
   else
