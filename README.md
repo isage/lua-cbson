@@ -214,12 +214,13 @@ See cbson.int. They are same (except sign), and you can init one from another.
 
 #### cbson.date(<number>value) or cbson.date(<date>value) or cbson.date(<string>value)
 
-See cbson.int. They are same, and you can init one from another.
+BSON Date is a 64-bit integer that represents the number of milliseconds since the Unix epoch (Jan 1, 1970).
+This results in a representable date range of about 290 million years into the past and future.
 
-### cbson.decimal(<string>value)
+#### cbson.decimal(<string>value)
 
-That's basically [decimal128](https://github.com/mongodb/specifications/blob/master/source/bson-decimal128/decimal128.rst).
-The Decimal128 specification supports 34 decimal digits of precision,
+It's [decimal128](https://github.com/mongodb/specifications/blob/master/source/bson-decimal128/decimal128.rst).
+The Decimal128 supports 34 decimal digits of precision,
 a max value of approximately `10^6145`, and min value of approximately `-10^6145`
 
 ```lua

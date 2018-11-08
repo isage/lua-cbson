@@ -7,6 +7,11 @@ local function readAll(file)
     return content
 end
 
+local regexes = { -- sometimes regex flags change positions
+    ["/foo|bar/ims"] = true,
+    ["/foo|bar/ism"] = true
+}
+
 TestBSON = {}
 
     function TestBSON:setUp() 
@@ -79,7 +84,7 @@ TestBSON = {}
     function TestBSON:test11_Decode_regex()
         luaunit.assertNotNil(self.data["regex"])
         luaunit.assertIsUserdata(self.data["regex"])
-        luaunit.assertEquals(tostring(self.data["regex"]), "/foo|bar/ism")
+        luaunit.assertTrue(regexes[tostring(self.data["regex"])])
     end
 
     function TestBSON:test12_Decode_date()
@@ -154,6 +159,20 @@ TestBSON = {}
         luaunit.assertTrue(decoded["foo"]["bar"] == 10.5)
     end
 
+    function TestBSON:test22_Decode_decimal()
+        luaunit.assertNotNil(self.data["dec"])
+        luaunit.assertEquals(tostring(self.data["dec"]), "0.05")
+    end
+
+    function TestBSON:test20_Encode_decimal()
+        local encoded = self.cbson.encode({foo = "0.05"})
+        luaunit.assertNotNil(encoded)
+        local decoded = self.cbson.decode(encoded)
+        luaunit.assertNotNil(decoded)
+        luaunit.assertNotNil(decoded["foo"])
+        luaunit.assertTrue(decoded["foo"] == "0.05")
+    end
+
 
 TestBSONEncode = {}
 
@@ -226,7 +245,7 @@ TestBSONEncode = {}
     function TestBSONEncode:test11_Decode_regex()
         luaunit.assertNotNil(self.data["regex"])
         luaunit.assertIsUserdata(self.data["regex"])
-        luaunit.assertEquals(tostring(self.data["regex"]), "/foo|bar/ims")
+        luaunit.assertTrue(regexes[tostring(self.data["regex"])])
     end
 
     function TestBSONEncode:test12_Decode_date()
@@ -262,6 +281,11 @@ TestBSONEncode = {}
         luaunit.assertEquals(self.data["timestamp"]:increment(),1000)
         luaunit.assertEquals(self.data["timestamp"]:increment(500),500)
         luaunit.assertEquals(self.data["timestamp"]:increment(),500)
+    end
+
+    function TestBSONEncode:test18_Decode_decimal()
+        luaunit.assertNotNil(self.data["dec"])
+        luaunit.assertEquals(tostring(self.data["dec"]), "0.05")
     end
 
 os.exit( luaunit.LuaUnit.run() )
