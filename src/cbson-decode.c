@@ -18,6 +18,7 @@
 #include "cbson-misc.h"
 #include "cbson-int.h"
 #include "cbson-date.h"
+#include "cbson-decimal.h"
 
 typedef struct {
   uint32_t count;
@@ -216,16 +217,15 @@ bool cbson_visit_dbpointer(const bson_iter_t *iter, const char *key, size_t v_co
 bool cbson_visit_binary(const bson_iter_t *iter, const char *key, bson_subtype_t v_subtype, size_t v_binary_len, const uint8_t *v_binary, void *data)
 {
   cbson_state_t *s = data;
-  size_t b64_len;
-  char *b64;
+  cbson_binary_create(s->L, v_subtype, (const char *)v_binary, (unsigned int)v_binary_len);
 
-  b64_len = (v_binary_len / 3 + 1) * 4 + 1;
-  b64 = malloc(b64_len);
-  b64_ntop(v_binary, v_binary_len, b64, b64_len);
+  return false;
+}
 
-  cbson_binary_create(s->L, v_subtype, b64);
-
-  free(b64);
+bool cbson_visit_decimal128(const bson_iter_t *iter, const char *key, const bson_decimal128_t *v_decimal128, void *data)
+{
+  cbson_state_t *s = data;
+  cbson_decimal_create(s->L, v_decimal128);
 
   return false;
 }
@@ -262,7 +262,9 @@ const bson_visitor_t cbson_visitors = {
   cbson_visit_timestamp,
   cbson_visit_int64,
   cbson_visit_maxkey,
-  cbson_visit_minkey
+  cbson_visit_minkey,
+  NULL, /* visit_unsupported */
+  cbson_visit_decimal128
 };
 
 bool cbson_visit_document(const bson_iter_t *iter, const char *key, const bson_t *v_document, void *data)
@@ -367,6 +369,30 @@ int cbson_to_json(lua_State *L)
   {
     const char* str = bson_as_json(bson, &len);
     lua_pushlstring(L, str, len);
+    bson_free((void *)str);
+    bson_destroy(bson);
+  }
+  else
+  {
+    luaL_error(L, "Can't init bson from data.");
+  }
+  return 1;
+}
+
+int cbson_to_relaxed_json(lua_State *L)
+{
+  bson_t *bson;
+  size_t len;
+
+  const uint8_t* data = (uint8_t*)luaL_checklstring(L, 1, &len);
+
+  bson = bson_new_from_data(data, len);
+
+  if (bson)
+  {
+    const char* str = bson_as_relaxed_extended_json(bson, &len);
+    lua_pushlstring(L, str, len);
+    bson_free((void *)str);
     bson_destroy(bson);
   }
   else

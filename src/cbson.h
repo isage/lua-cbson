@@ -6,7 +6,7 @@
 #endif
 
 #ifndef CBSON_VERSION
-#define CBSON_VERSION   "1.0"
+#define CBSON_VERSION   "1.1"
 #endif
 
 #ifndef BSON_MAX_RECURSION

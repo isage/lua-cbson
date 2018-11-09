@@ -20,6 +20,7 @@
 #include "cbson-int.h"
 #include "cbson-uint.h"
 #include "cbson-date.h"
+#include "cbson-decimal.h"
 
 
 // encoding
@@ -134,13 +135,7 @@ void switch_value(lua_State *L, int index, bson_t* bson, int level, const char* 
         {
           cbson_binary_t* bin = check_cbson_binary(L, index);
 
-          size_t binary_len = b64_pton (bin->data, NULL, 0);
-          unsigned char* buf=malloc(binary_len+1);
-          b64_pton(bin->data, buf, binary_len+1);
-
-          BSON_APPEND_BINARY(bson, key, bin->type, buf, binary_len);
-
-          free(buf);
+          BSON_APPEND_BINARY(bson, key, bin->type, (const uint8_t*)bin->data, bin->size);
         }
         else if (luaL_checkudata_ex(L, index, SYMBOL_METATABLE))
         {
@@ -213,6 +208,11 @@ void switch_value(lua_State *L, int index, bson_t* bson, int level, const char* 
           bson_t child;
           BSON_APPEND_ARRAY_BEGIN(bson, key, &child);
           bson_append_array_end(bson, &child);
+        }
+        else if (luaL_checkudata_ex(L, index,  DECIMAL_METATABLE))
+        {
+          cbson_decimal_t * dec = check_cbson_decimal(L, index);
+          BSON_APPEND_DECIMAL128(bson, key, &dec->dec);
         }
         break;
       }
@@ -321,7 +321,7 @@ int cbson_from_json(lua_State *L)
 
   if (bson)
   {
-    const uint8_t* data=bson_get_data(bson);
+    data = bson_get_data(bson);
     lua_pushlstring(L, (const char*)data, bson->len);
     bson_destroy(bson);
   }

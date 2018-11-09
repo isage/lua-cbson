@@ -1,42 +1,45 @@
 { 
-      "foo" : "bar", 
-      "bar" : 12341, 
-      "baz" : 123.456, 
-      "map" : { "a" : 1 }, 
-      "array" : [ 1, 2, 3, 4 ], 
-      "null" : null, 
-      "boolean" : true, 
-      "oid" : { 
-        "$oid" : "000000000000000000000000" 
-      }, 
-      "binary" : { 
-        "$type" : "00", 
-        "$binary" : "ZGVhZGJlZWY=" 
-      }, 
-      "regex" : { 
-        "$regex" : "foo|bar", 
-        "$options" : "ism" 
-      }, 
-      "date" : { 
-        "$date" : 10000 
-      }, 
-      "ref" : { 
-        "$ref" : "foo", 
-        "$id" : "000000000000000000000000" 
-      }, 
-      "undefined" : { 
-        "$undefined" : true 
-      }, 
-      "minkey" : { 
-        "$minKey" : 1 
-      }, 
-      "maxkey" : { 
-        "$maxKey" : 1 
-      }, 
-      "timestamp" : { 
-        "$timestamp" : { 
-           "t" : 100, 
-           "i" : 1000 
-        } 
-      } 
+  "foo" : "bar",
+  "bar" : 12341,
+  "baz" : 123.456,
+  "map" : { "a" : 1 },
+  "array" : [ 1, 2, 3, 4 ],
+  "null" : null,
+  "boolean" : true,
+  "oid" : {
+    "$oid" : "000000000000000000000000"
+  },
+  "binary" : {
+    "$type" : "00",
+    "$binary" : "ZGVhZGJlZWY="
+  },
+  "regex" : {
+    "$regex" : "foo|bar",
+    "$options" : "ism"
+  },
+  "date" : {
+    "$date" : 10000
+  },
+  "ref" : {
+    "$ref" : "foo",
+    "$id" : "000000000000000000000000"
+  },
+  "undefined" : {
+    "$undefined" : true
+  },
+  "minkey" : {
+    "$minKey" : 1
+  },
+  "maxkey" : {
+    "$maxKey" : 1
+  },
+  "timestamp" : {
+    "$timestamp" : {
+       "t" : 100,
+       "i" : 1000
+    }
+  },
+  "dec" : {
+    "$numberDecimal": "0.05"
+  }
 }

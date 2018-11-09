@@ -36,7 +36,7 @@ file(GLOB private_headers "src/[a-zA-Z]*.h")
 
 add_definitions("-Wall")
 
-find_package(LibBson REQUIRED)
+find_package(LibBson 1.7.0 REQUIRED)
 
 include_directories(${cbson_SOURCE_DIR}/src)
 include_directories(${LUA_INCLUDE_DIR})

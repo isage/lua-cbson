@@ -13,6 +13,7 @@
 #include "cbson-int.h"
 #include "cbson-uint.h"
 #include "cbson-date.h"
+#include "cbson-decimal.h"
 
 #include "cbson-encode.h"
 #include "cbson-decode.h"
@@ -48,31 +49,33 @@
 int luaopen_cbson(lua_State *L)
 {
   luaL_Reg cbsonlib[] = {
-    { "decode",       cbson_decode },
-    { "encode",       cbson_encode },
-    { "encode_first", cbson_encode_first },
-    { "to_json",      cbson_to_json },
-    { "from_json",    cbson_from_json },
-    { "regex",        cbson_regex_new },
-    { "oid",          cbson_oid_new },
-    { "binary",       cbson_binary_new },
-    { "symbol",       cbson_symbol_new },
-    { "code",         cbson_code_new },
-    { "codewscope",   cbson_codewscope_new },
-    { "undefined",    cbson_undefined_new },
-    { "null",         cbson_null_new },
-    { "array",        cbson_array_new },
-    { "minkey",       cbson_minkey_new },
-    { "maxkey",       cbson_maxkey_new },
-    { "ref",          cbson_ref_new },
-    { "timestamp",    cbson_timestamp_new },
-    { "int",          cbson_int64_new },
-    { "uint",         cbson_uint64_new },
-    { "date",         cbson_date_new },
-    { "int_to_raw",   cbson_int64_to_raw },
-    { "raw_to_int",   cbson_int64_from_raw },
-    { "uint_to_raw",  cbson_uint64_to_raw },
-    { "raw_to_uint",  cbson_uint64_from_raw },
+    { "decode",          cbson_decode },
+    { "encode",          cbson_encode },
+    { "encode_first",    cbson_encode_first },
+    { "to_json",         cbson_to_json },
+    { "to_relaxed_json", cbson_to_relaxed_json },
+    { "from_json",       cbson_from_json },
+    { "regex",           cbson_regex_new },
+    { "oid",             cbson_oid_new },
+    { "binary",          cbson_binary_new },
+    { "symbol",          cbson_symbol_new },
+    { "code",            cbson_code_new },
+    { "codewscope",      cbson_codewscope_new },
+    { "undefined",       cbson_undefined_new },
+    { "null",            cbson_null_new },
+    { "array",           cbson_array_new },
+    { "minkey",          cbson_minkey_new },
+    { "maxkey",          cbson_maxkey_new },
+    { "ref",             cbson_ref_new },
+    { "timestamp",       cbson_timestamp_new },
+    { "int",             cbson_int64_new },
+    { "uint",            cbson_uint64_new },
+    { "decimal",         cbson_decimal_new },
+    { "date",            cbson_date_new },
+    { "int_to_raw",      cbson_int64_to_raw },
+    { "raw_to_int",      cbson_int64_from_raw },
+    { "uint_to_raw",     cbson_uint64_to_raw },
+    { "raw_to_uint",     cbson_uint64_from_raw },
     { NULL, NULL }
   };
 
@@ -91,6 +94,7 @@ int luaopen_cbson(lua_State *L)
   DECLARE_CLASS(L, REF,        ref);
   DECLARE_CLASS(L, TIMESTAMP,  timestamp);
   DECLARE_CLASS(L, INT64,      int64);
+  DECLARE_CLASS(L, DECIMAL,    decimal);
   DECLARE_CLASS(L, DATE,       date);
   DECLARE_CLASS(L, UINT64,     uint64);
 
