@@ -24,7 +24,7 @@ Lua bindings to MongoDB's libbson
 * Lua (5.1/5.2) or LuaJit
 * Cmake 2.8.12 or later
 * Working C compiler
-* libbson 1.5 or later
+* libbson 1.7 or later
 
 ## Installation
 
