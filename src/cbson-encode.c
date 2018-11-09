@@ -321,7 +321,7 @@ int cbson_from_json(lua_State *L)
 
   if (bson)
   {
-    const uint8_t* data=bson_get_data(bson);
+    data = bson_get_data(bson);
     lua_pushlstring(L, (const char*)data, bson->len);
     bson_destroy(bson);
   }

@@ -24,7 +24,7 @@ Lua bindings to MongoDB's libbson
 * Lua (5.1/5.2) or LuaJit
 * Cmake 2.8.12 or later
 * Working C compiler
-* libbson 1.2 or later
+* libbson 1.5 or later
 
 ## Installation
 
@@ -122,6 +122,8 @@ print( binary:data() ) -- returns base64 encoded data "aGVsbG8="
 binary:set_data("ZGVhZGJlZWY=")
 ```
 
+Maximum size of binary string is `4,294,967,295` bytes.
+
 #### `cbson.symbol(<string>symbol)`
 
 ```lua
@@ -183,6 +185,9 @@ ref:id("432109876543210987654321")
 
 #### `cbson.timestamp(<number>timestamp, <number>increment)`
 
+BSON has a special [`timestamp`](https://docs.mongodb.com/manual/reference/bson-types/#timestamps) type for _internal_ 
+MongoDB use and is not associated with the regular `date` type. 
+
 ```lua
 local timestamp = cbson.timestamp(100,1000)
 timestamp:timestamp(500)
@@ -228,6 +233,9 @@ This results in a representable date range of about 290 million years into the p
 
 #### `cbson.decimal(<string>value)`
 
+Since version `1.1`.
+
+
 It's [decimal128](https://github.com/mongodb/specifications/blob/master/source/bson-decimal128/decimal128.rst).
 The Decimal128 supports 34 decimal digits of precision,
 a max value of approximately `10^6145`, and min value of approximately `-10^6145`
@@ -238,11 +246,6 @@ print(dec) -- 1.0
 
 local dec = cbson.decimal("0.0005")
 print(dec) -- 0.0005
-
-
-local dec = cbson.decimal("1.0")
-local dec2 = cbson.decimal(dec)
-print(dec2) -- 1.0
 ```
 
 ## Authors
