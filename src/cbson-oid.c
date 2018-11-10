@@ -1,6 +1,7 @@
 #include <lauxlib.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 #include "cbson.h"
 #include "cbson-oid.h"
