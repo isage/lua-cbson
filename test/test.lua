@@ -164,13 +164,22 @@ TestBSON = {}
         luaunit.assertEquals(tostring(self.data["dec"]), "0.05")
     end
 
-    function TestBSON:test20_Encode_decimal()
+    function TestBSON:test23_Encode_decimal()
         local encoded = self.cbson.encode({foo = "0.05"})
         luaunit.assertNotNil(encoded)
         local decoded = self.cbson.decode(encoded)
         luaunit.assertNotNil(decoded)
         luaunit.assertNotNil(decoded["foo"])
         luaunit.assertTrue(decoded["foo"] == "0.05")
+    end
+
+    function TestBSON:test24_New_binary_empty()
+        local b = self.cbson.binary()
+        luaunit.assertTrue(b:data() == "")
+        local b = self.cbson.binary("")
+        luaunit.assertTrue(b:data() == "")
+        local b = self.cbson.binary("ZGVhZGJlZWY=", 0)
+        luaunit.assertTrue(b:data() == "ZGVhZGJlZWY=")
     end
 
 

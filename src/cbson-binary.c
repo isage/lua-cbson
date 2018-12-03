@@ -27,38 +27,44 @@ char* cbson_binary_to_b64(cbson_binary_t* a)
 
 void cbson_binary_from_b64(cbson_binary_t* a, const char* b64)
 {
-  if (a->data)
-  {
-    free(a->data);
-  }
-  unsigned int size = b64_pton (b64, NULL, 0);
-  a->size = size;
-  if (size)
-  {
-    a->data = malloc(size + 1);
-    b64_pton(b64, (unsigned char*)a->data, size + 1);
+  unsigned int size = b64_pton(b64, NULL, 0);
+  if (size == a->size && size) {
+    b64_pton(b64, (unsigned char *) a->data, size + 1);
   } else {
-    a->data = NULL;
+    if (a->data) {
+      free(a->data);
+    }
+    a->size = size;
+    if (size) {
+      a->data = malloc(size + 1);
+      b64_pton(b64, (unsigned char *) a->data, size + 1);
+    } else {
+      a->data = NULL;
+    }
   }
 }
 
 void cbson_binary_from_raw(cbson_binary_t* a, const char* binary, unsigned int size)
 {
-  if (a->data)
-  {
-    free(a->data);
-  }
-  a->size = size;
-  if (size)
-  {
-    a->data = malloc(size);
+  if (size == a->size && size) {
     memcpy(a->data, binary, size);
   } else {
-    a->data = NULL;
+    if (a->data)
+    {
+      free(a->data);
+    }
+    a->size = size;
+    if (size)
+    {
+      a->data = malloc(size);
+      memcpy(a->data, binary, size);
+    } else {
+      a->data = NULL;
+    }
   }
 }
 
-int cbson_binary_create(lua_State* L, uint8_t type, const char* binary, unsigned int size)
+cbson_binary_t* cbson_binary_create(lua_State* L, uint8_t type, const char* binary, unsigned int size)
 {
   cbson_binary_t* ud = lua_newuserdata(L, sizeof(cbson_binary_t));
 
@@ -71,27 +77,20 @@ int cbson_binary_create(lua_State* L, uint8_t type, const char* binary, unsigned
   }
   luaL_getmetatable(L, BINARY_METATABLE);
   lua_setmetatable(L, -2);
-  return 1;
+  return ud;
 }
 
 int cbson_binary_new(lua_State* L)
 {
-  const char* b64 = luaL_checkstring(L, 1);
-  uint8_t type = luaL_optnumber(L, 2, 0);
+  const char* b64 = luaL_optstring(L, 1, NULL);
+  uint8_t type = (uint8_t)luaL_optnumber(L, 2, 0);
+  cbson_binary_t* ud = cbson_binary_create(L, type, NULL, 0);
 
-  if (b64)
+  if (b64 && strlen(b64))
   {
-    if (cbson_binary_create(L, type, NULL, 0))
-    {
-      cbson_binary_t* a = check_cbson_binary(L, 1);
-      cbson_binary_from_b64(a, b64);
-      return 1;
-    } else {
-      return 0;
-    }
-  } else {
-    return cbson_binary_create(L, type, NULL, 0);
+    cbson_binary_from_b64(ud, b64);
   }
+  return 1;
 }
 
 int cbson_binary_destroy(lua_State* L)
