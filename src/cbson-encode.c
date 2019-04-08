@@ -109,7 +109,25 @@ void switch_value(lua_State *L, int index, bson_t* bson, int level, const char* 
 
       case LUA_TSTRING:
       {
-        BSON_APPEND_UTF8(bson, key, lua_tostring(L, index));
+        size_t len;
+        const char* data = lua_tolstring(L, index, &len);
+        bson_t* child = bson_new_from_data((const uint8_t*)data, len);
+        if (child)
+        {
+          if (bson_validate(bson, BSON_VALIDATE_UTF8 | BSON_VALIDATE_EMPTY_KEYS, NULL))
+          {
+            BSON_APPEND_DOCUMENT(bson, key, child);
+          }
+          else
+          {
+            BSON_APPEND_UTF8(bson, key, data);
+          }
+          bson_destroy(child);
+        }
+        else
+        {
+          BSON_APPEND_UTF8(bson, key, data);
+        }
         break;
       }
 
