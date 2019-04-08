@@ -66,6 +66,16 @@ Decodes binary BSON data to lua table.
 
 Encodes lua table to binary BSON data.
 
+```lua
+local cbson = require "cbson"
+-- Encodes lua table
+local bson_data = cbson.encode({foobar = {bar = "hello", foo = "world"}})
+print(cbson.to_json(bson_data))  -- { "foobar" : { "foo" : "world", "bar" : "hello" } }
+-- Encodes lua table containing bson data
+local bson_data = cbson.encode({foobar = cbson.from_json('{"bar":"hello","foo":"world"}')})
+print(cbson.to_json(bson_data))  -- { "foobar" : { "bar" : "hello", "foo" : "world" } }
+```
+
 #### `<binary>bson_data = cbson.encode_first(<string>first_key, <table>data)`
 
 Encodes lua table to binary BSON data, putting first_key value at start of bson.  
