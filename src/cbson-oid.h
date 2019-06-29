@@ -6,7 +6,7 @@
 #define OID_METATABLE "bson-oid metatable"
 
 typedef struct {
-  char* oid;
+  char oid[25];
 } cbson_oid_t;
 
 int cbson_oid_create(lua_State* L, const char* oid);

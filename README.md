@@ -107,12 +107,13 @@ regex:options("im")
 print( regex:options() )
 ```
 
-#### `cbson.oid(<string>oid)`
+#### `cbson.oid(<string>oid) or cbson.oid(<oid>oid)`
 
 Unique object id with 24 hex numbers.
 
 ```lua
 local oid = cbson.oid("1234567890ABCDEF01234567")
+local oid2 = cbson.oid(oid)
 ```
 
 Get time from `oid` (first 8 hex numbers):

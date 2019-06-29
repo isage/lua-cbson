@@ -5,6 +5,7 @@
 
 #include "cbson.h"
 #include "cbson-oid.h"
+#include "cbson-util.h"
 
 DEFINE_CHECK(OID, oid)
 
@@ -18,8 +19,6 @@ int cbson_oid_create(lua_State* L, const char* oid)
   }
 
   cbson_oid_t* ud = lua_newuserdata(L, sizeof(cbson_oid_t));
-
-  ud->oid = malloc(strlen(oid)+1);
   strcpy(ud->oid, oid);
 
   luaL_getmetatable(L, OID_METATABLE);
@@ -29,18 +28,20 @@ int cbson_oid_create(lua_State* L, const char* oid)
 
 int cbson_oid_new(lua_State* L)
 {
-  const char* oid = luaL_checkstring(L, 1);
-
-  return cbson_oid_create(L, oid);
-}
-
-int cbson_oid_destroy(lua_State* L)
-{
-  cbson_oid_t* a = check_cbson_oid(L, 1);
-
-  free(a->oid);
-
-  return 0;
+  if (lua_isuserdata(L, 1) && luaL_checkudata_ex(L, 1, OID_METATABLE))
+  {
+    return cbson_oid_create(L, ((cbson_oid_t*)lua_touserdata(L, 1))->oid);
+  }
+  else if (lua_isstring(L, 1))
+  {
+    return cbson_oid_create(L, lua_tostring(L, 1));
+  }
+  else
+  {
+    lua_pushstring(L, "Invalid operand. Expected 'cbson.oid' or 'string'");
+    lua_error(L);
+    return 0;
+  }
 }
 
 int cbson_oid_tostring(lua_State* L)
@@ -67,7 +68,6 @@ int cbson_oid_timestamp(lua_State* L)
 
 const struct luaL_Reg cbson_oid_meta[] = {
   {"__tostring", cbson_oid_tostring},
-  {"__gc",       cbson_oid_destroy},
   {NULL, NULL}
 };
 
