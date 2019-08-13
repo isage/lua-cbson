@@ -28,6 +28,8 @@ Lua bindings to MongoDB's libbson
 
 ## Installation
 
+### Manual
+
 As easy as  
 ```bash
 mkdir build
@@ -40,6 +42,22 @@ make install
 You can also use `make unittest` after make to run tests.  
 By default module compiles with support for luajit  
 For other Lua interpreters see cmake options.
+
+### LuaRocks
+
+Via rockspec-file:
+
+```bash
+luarocks install https://raw.githubusercontent.com/isage/lua-cbson/master/rockspec/lua-cbson-git-1.rockspec
+```
+
+use specific lua version or luajit
+
+```bash
+luarocks --lua-dir=/usr/local/opt/openresty/luajit install https://raw.githubusercontent.com/isage/lua-cbson/master/rockspec/lua-cbson-git-1.rockspec
+```
+
+See all available versions of lua-bson in [./rockspec](rockspec directory).
 
 ## Usage
 
