@@ -14,6 +14,6 @@ build = {
     variables = {
         LUA_INCLUDE_DIR = "$(LUA_INCDIR)",
         LUA_LIBRARIES = "$(LUA_LIBDIR)",
-        LUA_LIBRARY = "$(LUA_LIBDIR)/lua",
+        LUA_LIBRARY = "$(ROCKS_TREE)/..",
     }
 }
