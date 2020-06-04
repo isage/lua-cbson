@@ -46,9 +46,19 @@
 #endif
 
 
+int cbson_set_array_mt(lua_State *state) {
+  lua_pushstring(state, CBSON_ARRAY_MT);
+  lua_pushvalue(state, -2);
+  lua_rawset(state, LUA_REGISTRYINDEX);
+
+  return 0;
+}
+
+
 int luaopen_cbson(lua_State *L)
 {
   luaL_Reg cbsonlib[] = {
+    { "set_array_mt",     cbson_set_array_mt },
     { "decode",          cbson_decode },
     { "encode",          cbson_encode },
     { "encode_first",    cbson_encode_first },

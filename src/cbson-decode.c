@@ -308,7 +308,12 @@ bool cbson_visit_array(const bson_iter_t *iter, const char *key, const bson_t *v
 
   if (bson_iter_init(&iter_new, v_array))
   {
-    lua_newtable(s->L);
+    { // use metatable for arrays
+      lua_newtable(s->L);
+      luaL_getmetatable(s->L, CBSON_ARRAY_MT);
+      lua_setmetatable(s->L, -2);
+    }
+
     cs.depth = s->depth + 1;
     cs.L = s->L;
     bson_iter_visit_all(&iter_new, &cbson_visitors, &cs);

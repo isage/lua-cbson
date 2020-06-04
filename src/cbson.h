@@ -13,6 +13,7 @@
 #define BSON_MAX_RECURSION 100
 #endif
 
+#define CBSON_ARRAY_MT "CBSON_ARRAY_MT"
 
 #define DEFINE_CHECK(name, type) \
 cbson_##type##_t* check_cbson_##type (lua_State *L, int index) \

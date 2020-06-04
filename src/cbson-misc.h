@@ -1,6 +1,7 @@
 #ifndef __CBSON_MINMAX_H__
 #define __CBSON_MINMAX_H__
 
+#include <lauxlib.h>
 #include <lua.h>
 
 #define UNDEFINED_METATABLE "bson-undef metatable"
