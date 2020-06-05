@@ -58,7 +58,7 @@ local bson_data = cbson.from_json(json_string)
 
 ### Compatibility with cjson array metatables
 
-`cjson` (and higher) uses metatable for set table (especially empty) as arrays, so this library can use this (or other)
+`cjson` (2.1.0.5 and higher) uses metatable for set table (especially empty) as arrays, so this library can use this (or other)
 metatable for encoding and decoding arrays. See [usage array metatables example](test/using_cjson_array_mt.lua)
 
 ### CBSON Functions
