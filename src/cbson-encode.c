@@ -29,6 +29,17 @@ static int is_array(lua_State *L, int index)
   double k;
   int cnt = 0;
 
+  // check by metatable at first
+  if (lua_getmetatable(L, index) != 0) {
+    luaL_getmetatable(L, CBSON_ARRAY_MT);
+    bool is_array_mt = lua_equal(L, -1, -2);
+    lua_pop(L, 2);
+
+    if (is_array_mt) {
+      return 1;
+    }
+  }
+
   lua_pushvalue(L, index);
   lua_pushnil(L);
 
