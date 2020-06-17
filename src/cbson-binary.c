@@ -6,6 +6,7 @@
 
 #include "cbson.h"
 #include "cbson-binary.h"
+#include "compat/base64.h"
 
 DEFINE_CHECK(BINARY, binary)
 

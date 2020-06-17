@@ -32,6 +32,7 @@ set (cbson_VERSION_MAJOR 1)
 set (cbson_VERSION_MINOR 0)
 
 file(GLOB sources "src/[a-zA-Z]*.c")
+file(GLOB compat "src/compat/[a-zA-Z]*.c")
 file(GLOB private_headers "src/[a-zA-Z]*.h")
 
 add_definitions("-Wall")
@@ -59,7 +60,7 @@ else()
   endif ()
 endif()
 
-add_library(cbson MODULE ${sources})
+add_library(cbson MODULE ${sources} ${compat})
 set_target_properties(cbson PROPERTIES PREFIX "")
 if (NOT WIN32)
   set_target_properties(cbson PROPERTIES SUFFIX ".so")
