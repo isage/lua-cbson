@@ -125,7 +125,7 @@ void switch_value(lua_State *L, int index, bson_t* bson, int level, const char* 
         bson_t* child = bson_new_from_data((const uint8_t*)data, len);
         if (child)
         {
-          if (bson_validate(bson, BSON_VALIDATE_UTF8 | BSON_VALIDATE_EMPTY_KEYS, NULL))
+          if (bson_validate(child, BSON_VALIDATE_UTF8 | BSON_VALIDATE_EMPTY_KEYS, NULL))
           {
             BSON_APPEND_DOCUMENT(bson, key, child);
           }
