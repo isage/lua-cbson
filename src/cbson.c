@@ -46,7 +46,8 @@
 #endif
 
 
-int cbson_set_array_mt(lua_State *state) {
+int cbson_set_array_mt(lua_State *state)
+{
   lua_pushstring(state, CBSON_ARRAY_MT);
   lua_pushvalue(state, -2);
   lua_rawset(state, LUA_REGISTRYINDEX);
@@ -58,7 +59,7 @@ int cbson_set_array_mt(lua_State *state) {
 int luaopen_cbson(lua_State *L)
 {
   luaL_Reg cbsonlib[] = {
-    { "set_array_mt",     cbson_set_array_mt },
+    { "set_array_mt",    cbson_set_array_mt },
     { "decode",          cbson_decode },
     { "encode",          cbson_encode },
     { "encode_first",    cbson_encode_first },
@@ -121,6 +122,13 @@ int luaopen_cbson(lua_State *L)
   lua_setfield(L, -2, "_NAME");
   lua_pushliteral(L, CBSON_VERSION);
   lua_setfield(L, -2, "_VERSION");
+
+  lua_newtable(L); // ordered_map_mt
+  lua_pushstring(L, CBSON_ORDERED_MAP_MT);
+  lua_pushvalue(L, -2);
+  lua_rawset(L, LUA_REGISTRYINDEX);
+
+  lua_setfield(L, -2, "ordered_map_mt");
 
   return 1;
 }

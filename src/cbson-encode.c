@@ -30,12 +30,14 @@ static int is_array(lua_State *L, int index)
   int cnt = 0;
 
   // check by metatable at first
-  if (lua_getmetatable(L, index) != 0) {
+  if (lua_getmetatable(L, index) != 0)
+  {
     luaL_getmetatable(L, CBSON_ARRAY_MT);
     bool is_array_mt = lua_equal(L, -1, -2);
     lua_pop(L, 2);
 
-    if (is_array_mt) {
+    if (is_array_mt)
+    {
       return 1;
     }
   }
@@ -70,7 +72,26 @@ static int is_array(lua_State *L, int index)
   }
 }
 
+
+static int is_ordered_map(lua_State *L, int index)
+{
+  if (lua_getmetatable(L, index) != 0)
+  {
+    luaL_getmetatable(L, CBSON_ORDERED_MAP_MT);
+    bool is_ordered_map_mt = lua_equal(L, -1, -2);
+    lua_pop(L, 2);
+
+    if (is_ordered_map_mt)
+    {
+      return 1;
+    }
+  }
+
+  return 0;
+}
+
 static void iterate_table(lua_State *L, int index, bson_t* bson, int use_keys, int level, const char* firstkey);
+static void iterate_ordered_table(lua_State *L, int index, bson_t* bson, int level);
 
 
 void switch_value(lua_State *L, int index, bson_t* bson, int level, const char* key)
@@ -80,14 +101,27 @@ void switch_value(lua_State *L, int index, bson_t* bson, int level, const char* 
       case LUA_TTABLE:
       {
         int is_a=is_array(L, index);
-
+        int is_order_map = false;
         if (is_a)
+        {
+          is_order_map = is_ordered_map(L, index);
+        }
+
+        if (is_a && is_order_map == false)
         {
           bson_t child;
           //start array
           BSON_APPEND_ARRAY_BEGIN(bson, key, &child);
           iterate_table(L, index, &child, 0, level+1, NULL);
           bson_append_array_end(bson, &child);
+        }
+        else if (is_a && is_order_map == true)
+        {
+          bson_t child;
+          //start ordered map
+          BSON_APPEND_DOCUMENT_BEGIN(bson, key, &child);
+          iterate_ordered_table(L, index, &child, level+1);
+          bson_append_document_end(bson, &child);
         }
         else
         {
@@ -308,13 +342,60 @@ static void iterate_table(lua_State *L, int index, bson_t* bson, int use_keys, i
   lua_pop(L, 1);
 }
 
+static void iterate_ordered_table(lua_State *L, int index, bson_t* bson, int level)
+{
+
+  lua_pushvalue(L, index);
+  // stack: -1 => table
+
+  lua_pushnil(L);
+  // stack: -1 => nil; -2 => table
+
+  int k=0;
+
+
+  while (lua_next(L, -2))
+  {
+    lua_pushnil(L);
+    if (lua_next(L, -2) == 0)
+    {
+      continue;
+    }
+
+    lua_pushvalue(L, -2);
+    const char *key = lua_tostring(L, -1);
+
+    switch_value(L, -2, bson, level, key);
+
+    lua_pop(L, 4);
+    // stack: -1 => key; -2 => table
+    k++;
+  }
+  // stack: -1 => table
+  lua_pop(L, 1);
+}
+
 int cbson_encode(lua_State *L)
 {
   bson_t bson = BSON_INITIALIZER;
 
   luaL_checktype(L, 1, LUA_TTABLE);
 
-  iterate_table(L, 1,  &bson, 1, 0, NULL);
+  bool is_arr = is_array(L, 1);
+  bool is_order_map = false;
+  if (is_arr)
+  {
+    is_order_map = is_ordered_map(L, 1);
+  }
+
+  if (is_arr && is_order_map == true)
+  {
+    iterate_ordered_table(L, 1, &bson, 1);
+  }
+  else
+  {
+    iterate_table(L, 1, &bson, 1, 0, NULL);
+  }
 
   const uint8_t* data=bson_get_data(&bson);
   lua_pushlstring(L, (const char*)data, bson.len);
