@@ -14,6 +14,8 @@
 #endif
 
 #define CBSON_ARRAY_MT "CBSON_ARRAY_MT"
+#define CBSON_ORDERED_MAP_MT "CBSON_ORDERED_MAP_MT"
+
 
 #define DEFINE_CHECK(name, type) \
 cbson_##type##_t* check_cbson_##type (lua_State *L, int index) \
